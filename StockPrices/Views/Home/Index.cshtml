@@ -1,0 +1,66 @@
+﻿@model IEnumerable<StockPrices.Models.Stock>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        var getStocks = function () {
+
+            $('#stockDetails').show('fast');
+            var stock = $("#txtfilter").val();
+            $.ajax({
+                type: 'POST',
+                url: "/Home/Index",
+                data: JSON.stringify({ Prefix: stock }),
+                contentType: 'application/json',
+                dataType: "html",
+                success: function (evt) {
+                    $('#stockDetails').html(evt);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error: ", errorMessage);
+                }
+            });
+        };
+
+        $("#txtfilter").keyup(getStocks);
+        $("#Click").click(getStocks)
+
+        
+    })
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            <div class="col-md-2">
+                @Html.Label("Stock:")
+ 
+            </div>
+            <div class="col-md-2">
+
+                <input type="text" id="txtfilter" />
+                <input type="button" value="Click" id="Click" />
+                <div id="stockDetails">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
